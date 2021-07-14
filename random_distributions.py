@@ -4,6 +4,15 @@
 # random library that comes with base python
 
 from random import random
+import numpy as np
+
+def lcg(a=16807, c=0, mod=(2**31)-1, seed=12567):
+    """
+    The L'Ecuyer linear congruential generator to potentially be used in the following random 
+    variate generators
+    """
+    x = (a*seed + c) % mod
+    return x/mod
 
 def unif(a, b):
     """
