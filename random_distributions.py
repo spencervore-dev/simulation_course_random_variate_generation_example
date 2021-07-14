@@ -14,14 +14,10 @@ def lcg(a=16807, c=0, mod=(2**31)-1, seed=12567):
     x = (a*seed + c) % mod
     return x/mod
 
-def unif(a, b):
+def unif(a=0, b=1):
     """
     Generate a uniform distribution between a and b
     """
-    # ^^ The above comment is called a docstring. If it's
-    # immediately below the function definition, it can
-    # show up in python help and you can write comments
-    # that describe what the function does.
 
     U = random()
     return (U+ a/(b-a))*(b-a)
