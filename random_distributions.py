@@ -130,3 +130,24 @@ def weibull(lamb, beta):
     U = lcg.rand()
 
     return (1/lamb)*(-np.log(U))**(1/beta)
+
+def geom(p):
+    """
+    Generate a geometric random variate with probability of success, p, and returns the number
+    of failures until the first success.
+    """
+    U = lcg.rand()
+    
+    return round((np.log(1-U)/np.log(1-p))+0.5,0)
+
+def negbin(n,p):
+    """
+    Generate a negative binomial random variate with probability of success, p, and returns the 
+    number of failures until the nth success.
+    """
+    fails = []
+    
+    for _ in range(n):
+        B = geom(p)
+        fails.append(B)
+    return np.sum(fails)
