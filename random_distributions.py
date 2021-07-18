@@ -7,7 +7,6 @@ from random import random
 import numpy as np
 from datetime import datetime
 
-
 class lcg_class:
     """
     The L'Ecuyer linear congruential generator to potentially be used in the following random
@@ -138,16 +137,15 @@ def geom(p):
     """
     U = lcg.rand()
 
-    return round((np.log(1-U)/np.log(1-p))+0.5,0)
+    return np.ceil((np.log(1-U)/np.log(1-p)))
 
 def negbin(n,p):
     """
     Generate a negative binomial random variate with probability of success, p, and returns the 
     number of failures until the nth success.
     """
-    fails = []
+    fails = 0
 
     for _ in range(n):
-        B = geom(p)
-        fails.append(B)
-    return np.sum(fails)
+        fails += geom(p) - 1
+    return fails

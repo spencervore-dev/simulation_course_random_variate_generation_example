@@ -277,4 +277,46 @@ conclusion = stat_conclusion(p_val, alpha)
 print(f"{conclusion} the null hypothesis that the distributions are the same.")
 print()
 
+n = 50
+p = 0.7
+
+our_negbin = [rds.negbin(n,p) for _ in range(obs)]
+np_negbin = random.negative_binomial(n, p, obs)
+test_stat, p_val = ks_2samp(our_negbin, np_negbin)
+
+print(f"Kolmogorov-Smirnov test result comparing our negbin({n}, {p}) distribution to numpy's:")
+print(f"Test statistic is: {test_stat}")
+print(f"p-value is: {p_val}")
+conclusion = stat_conclusion(p_val, alpha)
+print(f"{conclusion} the null hypothesis that the distributions are the same.")
+print()
+
+n = 5
+p = 0.01
+
+our_negbin = [rds.negbin(n,p) for _ in range(obs)]
+np_negbin = random.negative_binomial(n, p, obs)
+test_stat, p_val = ks_2samp(our_negbin, np_negbin)
+
+print(f"Kolmogorov-Smirnov test result comparing our negbin({n}, {p}) distribution to numpy's:")
+print(f"Test statistic is: {test_stat}")
+print(f"p-value is: {p_val}")
+conclusion = stat_conclusion(p_val, alpha)
+print(f"{conclusion} the null hypothesis that the distributions are the same.")
+print()
+
+n = 2
+p = 0.8
+
+our_negbin = [rds.negbin(n,p) for _ in range(obs)]
+np_negbin = random.negative_binomial(n, p, obs)
+test_stat, p_val = ks_2samp(our_negbin, np_negbin)
+
+print(f"Kolmogorov-Smirnov test result comparing our negbin({n}, {p}) distribution to numpy's:")
+print(f"Test statistic is: {test_stat}")
+print(f"p-value is: {p_val}")
+conclusion = stat_conclusion(p_val, alpha)
+print(f"{conclusion} the null hypothesis that the distributions are the same.")
+print()
+
 
