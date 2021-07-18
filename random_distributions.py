@@ -137,7 +137,7 @@ def geom(p):
     of failures until the first success.
     """
     U = lcg.rand()
-    
+
     return round((np.log(1-U)/np.log(1-p))+0.5,0)
 
 def negbin(n,p):
@@ -146,7 +146,7 @@ def negbin(n,p):
     number of failures until the nth success.
     """
     fails = []
-    
+
     for _ in range(n):
         B = geom(p)
         fails.append(B)
