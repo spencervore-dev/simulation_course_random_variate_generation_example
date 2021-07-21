@@ -9,6 +9,7 @@ from scipy.integrate import quad
 import scipy.optimize as opt
 from datetime import datetime
 
+
 class lcg_class:
     """
     The Desert Island linear congruential generator to potentially be used in the following random
@@ -44,6 +45,7 @@ class lcg_class:
 # Now create (i.e. instantiate) the lcg object
 lcg = lcg_class()
 
+
 def unif(a=0, b=1):
     """
     Generate a uniform distribution between a and b
@@ -51,6 +53,7 @@ def unif(a=0, b=1):
 
     U = lcg.rand()
     return (U+ a/(b-a))*(b-a)
+
 
 def bern(p):
     """
@@ -60,16 +63,18 @@ def bern(p):
     U = lcg.rand()
     return int(U <= p)
 
+
 def binom(n, p):
     """
     Generate a binomial random variate that returns the number of successes in n trials,
     with p probability of success, from a standard uniform distribution.
     """
-    trials = []
+    trials = 0
     for _ in range(n):
         U = lcg.rand()
-        trials.append(int(U <= p))
-    return np.sum(trials)
+        trials += int(U <= p)
+    return trials
+
 
 def norm(mu, sigma, trig="cos"):
     """
@@ -86,6 +91,7 @@ def norm(mu, sigma, trig="cos"):
 
     return mu + sigma*z
 
+
 def tria(a, c):
     """
     Generate a triangualar random variate with min=a, max=c, and most likely, b, being halfway
@@ -99,6 +105,7 @@ def tria(a, c):
     else:
         return c - np.sqrt((1 - U)*(c - a)*(c - b))
 
+
 def expo(lamb):
     """
     Generate an exponential random variate with l = lambda, using U from a standard uniform
@@ -107,6 +114,7 @@ def expo(lamb):
     U = lcg.rand()
 
     return -(1/lamb)*np.log(U)
+
 
 def poisson(lamb):
     """
@@ -123,6 +131,7 @@ def poisson(lamb):
         n += 1
     return n
 
+
 def weibull(lamb, beta):
     """
     Generate a weibull random variate with lambda = lamb and beta, using a standard uniform
@@ -132,25 +141,32 @@ def weibull(lamb, beta):
 
     return (1/lamb)*(-np.log(U))**(1/beta)
 
-def geom(p):
+
+def geom(p, include_success=True):
     """
     Generate a geometric random variate with probability of success, p, and returns the number
     of failures until the first success.
     """
     U = lcg.rand()
+    if include_success:
+        correction = 0
+    else:
+        correction = 1
 
-    return np.ceil((np.log(1-U)/np.log(1-p)))
 
-def negbin(n,p):
+    return np.ceil((np.log(1-U)/np.log(1-p))) - correction
+
+
+def negbin(n,p, include_success=False):
     """
     Generate a negative binomial random variate with probability of success, p, and returns the 
     number of failures until the nth success.
     """
     fails = 0
-
     for _ in range(n):
-        fails += geom(p) - 1
+        fails += geom(p, include_success)
     return fails
+
 
 def gamma(alpha, beta):
     """
@@ -164,26 +180,26 @@ def gamma(alpha, beta):
     g_of_alpha = quad(integrand, 0, 100, args=(alpha))[0]
     def pdf(alpha, beta, x):
         return (1/(beta**alpha * g_of_alpha)) * x**(alpha-1) * np.exp(-x/beta)
-    
+
     #Find t(x) as a function strictly greater than or equal to the pdf. 
     #In this case I'm using the max of the pdf
     max_pdf = opt.fmin_l_bfgs_b(lambda x: -pdf(alpha, beta, x), 1.0, bounds=[(0,9)], approx_grad=True)
     t_of_x = max_pdf[0][0]
-    
+
     #Calculate constant, c
     #Using 100 as an upper bound for the integral instead of inf
     def itegrate_c(x, t_of_x):
         return t_of_x
     c = quad(itegrate_c, 0, 100, args=(t_of_x))[0]
-    
+
     #Create loop where generate U and y, and if U<=g(y), then accept y, else repeat
     U = 1
     g_of_y = 0
-    
+
     while U > g_of_y:
         #Generate y from h(x)=t(x)/c, which is Uniform(0,1)
         U = lcg.rand()
         y = lcg.rand()
         g_of_y = pdf(alpha, beta, y) / t_of_x
-        
+
     return y

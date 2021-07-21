@@ -11,17 +11,27 @@ import numpy as np
 # Import the other script where we define all the functions
 import random_distributions as rds
 
+# Define standard constants for all tests
 obs = 100_000
 alpha = 0.001 #Use low alpha as sample size is large
 
 
-# Demo each distribution
+# Some useful functions for standardizing output from statistical tests
 def stat_conclusion(p, alpha):
     '''Returns conlcusion of statistical test based on test stat and alpha'''
     if p > alpha:
         return 'ACCEPT'
     else:
         return 'REJECT'
+
+
+def print_ks_result(test_stat, p_val, alpha):
+    '''Prints results of Kolomogorov-Smirnov test in standard format'''
+    print(f"Test statistic is: {test_stat}")
+    print(f"p-value is: {p_val}")
+    conclusion = stat_conclusion(p_val, alpha)
+    print(f"{conclusion} the null hypothesis that the distributions are the same.")
+    print()
 
 
 # Perform Kruskal Wallis test - this is a nonparametric test
@@ -73,11 +83,7 @@ print()
 test_stat, p_val2 = ks_2samp(np_unifs, np_unifs2)
 print("DEMO of Kolmogorov-Smirnov test with different distributions - This should REJECT.")
 print(f"KS test results on two different unif distributions, unif({a}, {b}) and unif({a}, {b2}) from numpy.")
-print(f"Test statistic is: {test_stat}")
-print(f"p-value is: {p_val2}")
-conclusion = stat_conclusion(p_val2, alpha)
-print(f"{conclusion} the null hypothesis that the distributions are the same.")
-print()
+print_ks_result(test_stat, p_val, alpha)
 print("---------------------------------------------\n\n")
 
 # Lets see what happens if we use two completely different distributions
@@ -108,11 +114,7 @@ print("DEMO of Kolmogorov-Smirnov test with different distributions - "
 "\n\tThis should REJECT even though these distributions have the same median.")
 print(f"KS test result comparing a norm({mu}, {sig}) with a unif({a}, {b}) "
 "\n\tfrom numpy:")
-print(f"Test statistic is: {test_stat}")
-print(f"p-value is: {p_val2}")
-conclusion = stat_conclusion(p_val2, alpha)
-print(f"{conclusion} the null hypothesis that the distributions are the same.")
-print()
+print_ks_result(test_stat, p_val, alpha)
 
 print("After testing, we will only use the KS test going forward to test these "
 "\n\tdistrubtions since it's more general and doesn't have this median limitation.")
@@ -131,11 +133,7 @@ test_stat, p_val = ks_2samp(our_unifs, np_unifs)
 
 print("UNIFORM DISTRIBUTION")
 print(f"Kolmogorov-Smirnov test result comparing our unif({a}, {b}) distribution to numpy's:")
-print(f"Test statistic is: {test_stat}")
-print(f"p-value is: {p_val}")
-conclusion = stat_conclusion(p_val, alpha)
-print(f"{conclusion} the null hypothesis that the distributions are the same.")
-print()
+print_ks_result(test_stat, p_val, alpha)
 
 # Bernouilli - Since this is only 0 or 1, not sure if KS test will work well. 
 # This distribution also doesn't exist in numpy random. However, since this 
@@ -154,12 +152,7 @@ test_stat, p_val = ks_2samp(our_binoms, np_binoms)
 
 print("BINOMIAL DISTRIBUTION")
 print(f"Kolmogorov-Smirnov test result comparing our binom({n}, {p}) distribution to numpy's:")
-print(f"Test statistic is: {test_stat}")
-print(f"p-value is: {p_val}")
-conclusion = stat_conclusion(p_val, alpha)
-print(f"{conclusion} the null hypothesis that the distributions are the same.")
-print()
-
+print_ks_result(test_stat, p_val, alpha)
 
 # Normal
 mu = 48
@@ -171,12 +164,7 @@ test_stat, p_val = ks_2samp(our_norms, np_norms)
 
 print("NORMAL DISTRIBUTION")
 print(f"Kolmogorov-Smirnov test result comparing our norm({mu}, {sig}) distribution to numpy's:")
-print(f"Test statistic is: {test_stat}")
-print(f"p-value is: {p_val}")
-conclusion = stat_conclusion(p_val, alpha)
-print(f"{conclusion} the null hypothesis that the distributions are the same.")
-print()
-
+print_ks_result(test_stat, p_val, alpha)
 
 # Triangular
 a = 3
@@ -188,12 +176,7 @@ test_stat, p_val = ks_2samp(our_trigs, np_trigs)
 
 print("TRIANGULAR DISTRIBUTION")
 print(f"Kolmogorov-Smirnov test result comparing our tria({a}, {b}) distribution to numpy's:")
-print(f"Test statistic is: {test_stat}")
-print(f"p-value is: {p_val}")
-conclusion = stat_conclusion(p_val, alpha)
-print(f"{conclusion} the null hypothesis that the distributions are the same.")
-print()
-
+print_ks_result(test_stat, p_val, alpha)
 
 # Exponential
 lamb = 0.001
@@ -204,11 +187,7 @@ test_stat, p_val = ks_2samp(our_expos, np_expos)
 
 print("EXPONENTIAL DISTRIBUTION")
 print(f"Kolmogorov-Smirnov test result comparing our expo({lamb}) distribution to numpy's:")
-print(f"Test statistic is: {test_stat}")
-print(f"p-value is: {p_val}")
-conclusion = stat_conclusion(p_val, alpha)
-print(f"{conclusion} the null hypothesis that the distributions are the same.")
-print()
+print_ks_result(test_stat, p_val, alpha)
 
 
 # Poisson
@@ -220,12 +199,7 @@ test_stat, p_val = ks_2samp(our_fishies, np_fishies)
 
 print("POISSON DISTRIBUTION")
 print(f"Kolmogorov-Smirnov test result comparing our poisson({lamb}) distribution to numpy's:")
-print(f"Test statistic is: {test_stat}")
-print(f"p-value is: {p_val}")
-conclusion = stat_conclusion(p_val, alpha)
-print(f"{conclusion} the null hypothesis that the distributions are the same.")
-print()
-
+print_ks_result(test_stat, p_val, alpha)
 
 # Weibull
 lamb = 2
@@ -239,12 +213,7 @@ test_stat, p_val = ks_2samp(our_weibull, py_weibull)
 
 print("WEIBULL DISTRIBUTION")
 print(f"Kolmogorov-Smirnov test result comparing our weibull({lamb}, {beta}) distribution to pythons base random lib's:")
-print(f"Test statistic is: {test_stat}")
-print(f"p-value is: {p_val}")
-conclusion = stat_conclusion(p_val, alpha)
-print(f"{conclusion} the null hypothesis that the distributions are the same.")
-print()
-
+print_ks_result(test_stat, p_val, alpha)
 
 # Geometric
 p = 0.4
@@ -255,11 +224,7 @@ test_stat, p_val = ks_2samp(our_geom, np_geom)
 
 print("GEOMETRIC DISTRIBUTION")
 print(f"Kolmogorov-Smirnov test result comparing our geom({p}) distribution to numpy's:")
-print(f"Test statistic is: {test_stat}")
-print(f"p-value is: {p_val}")
-conclusion = stat_conclusion(p_val, alpha)
-print(f"{conclusion} the null hypothesis that the distributions are the same.")
-print()
+print_ks_result(test_stat, p_val, alpha)
 
 # NegBin
 n = 5
@@ -271,11 +236,7 @@ test_stat, p_val = ks_2samp(our_negbin, np_negbin)
 
 print("NEGATIVE BINOMIAL DISTRIBUTION")
 print(f"Kolmogorov-Smirnov test result comparing our negbin({n}, {p}) distribution to numpy's:")
-print(f"Test statistic is: {test_stat}")
-print(f"p-value is: {p_val}")
-conclusion = stat_conclusion(p_val, alpha)
-print(f"{conclusion} the null hypothesis that the distributions are the same.")
-print()
+print_ks_result(test_stat, p_val, alpha)
 
 n = 50
 p = 0.7
@@ -286,10 +247,7 @@ test_stat, p_val = ks_2samp(our_negbin, np_negbin)
 
 print(f"Kolmogorov-Smirnov test result comparing our negbin({n}, {p}) distribution to numpy's:")
 print(f"Test statistic is: {test_stat}")
-print(f"p-value is: {p_val}")
-conclusion = stat_conclusion(p_val, alpha)
-print(f"{conclusion} the null hypothesis that the distributions are the same.")
-print()
+print_ks_result(test_stat, p_val, alpha)
 
 n = 5
 p = 0.01
@@ -299,11 +257,7 @@ np_negbin = random.negative_binomial(n, p, obs)
 test_stat, p_val = ks_2samp(our_negbin, np_negbin)
 
 print(f"Kolmogorov-Smirnov test result comparing our negbin({n}, {p}) distribution to numpy's:")
-print(f"Test statistic is: {test_stat}")
-print(f"p-value is: {p_val}")
-conclusion = stat_conclusion(p_val, alpha)
-print(f"{conclusion} the null hypothesis that the distributions are the same.")
-print()
+print_ks_result(test_stat, p_val, alpha)
 
 n = 2
 p = 0.8
@@ -314,9 +268,6 @@ test_stat, p_val = ks_2samp(our_negbin, np_negbin)
 
 print(f"Kolmogorov-Smirnov test result comparing our negbin({n}, {p}) distribution to numpy's:")
 print(f"Test statistic is: {test_stat}")
-print(f"p-value is: {p_val}")
-conclusion = stat_conclusion(p_val, alpha)
-print(f"{conclusion} the null hypothesis that the distributions are the same.")
-print()
+print_ks_result(test_stat, p_val, alpha)
 
 
