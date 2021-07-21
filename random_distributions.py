@@ -168,38 +168,4 @@ def negbin(n,p, include_success=False):
     return fails
 
 
-def gamma(alpha, beta):
-    """
-    Generate an estimate for a gamma random variate with alpha and beta as parameters, using the 
-    Acceptance-Rejection method.
-    """
-    #First define the pdf of gamma
-    #Using 100 as an upper bound to the integral as it converges to 0 fairly quickly
-    def integrand(t, alpha):
-        return t**(alpha-1) * np.exp(-alpha)
-    g_of_alpha = quad(integrand, 0, 100, args=(alpha))[0]
-    def pdf(alpha, beta, x):
-        return (1/(beta**alpha * g_of_alpha)) * x**(alpha-1) * np.exp(-x/beta)
 
-    #Find t(x) as a function strictly greater than or equal to the pdf. 
-    #In this case I'm using the max of the pdf
-    max_pdf = opt.fmin_l_bfgs_b(lambda x: -pdf(alpha, beta, x), 1.0, bounds=[(0,9)], approx_grad=True)
-    t_of_x = max_pdf[0][0]
-
-    #Calculate constant, c
-    #Using 100 as an upper bound for the integral instead of inf
-    def itegrate_c(x, t_of_x):
-        return t_of_x
-    c = quad(itegrate_c, 0, 100, args=(t_of_x))[0]
-
-    #Create loop where generate U and y, and if U<=g(y), then accept y, else repeat
-    U = 1
-    g_of_y = 0
-
-    while U > g_of_y:
-        #Generate y from h(x)=t(x)/c, which is Uniform(0,1)
-        U = lcg.rand()
-        y = lcg.rand()
-        g_of_y = pdf(alpha, beta, y) / t_of_x
-
-    return y
