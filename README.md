@@ -52,9 +52,6 @@ An exponential distribution is used to measure interarrival times, as well as ma
 #### Weibull
 A Weibull distribution is very similar to the exponential distribution, but with an additional parameter, beta. It is also a special case of the gamma distribution. For this function, a user will specify the lambda and beta parameters. The Weibull cdf luckily has a closed form, so the inverse transform method is used with the lcg to then return a value from the Weibull distribution desired.
 
-#### Gamma
-Gamma distributions are often used to model time to failure, such as in actuarial sciences to model survival. The cdf for the gamma distribution does not have a closed form, so the Acceptance-Rejection (A-R) method was used to calculate random variates. A more in-depth description can be found above in the Background & Description section. For this routine, a user should input alpha and beta as parameters and the A-R calculation with the lcg will then return an estimate for a gamma random variate.
-
 #### Normal
 A normal distribution has mean and standard deviation parameters. This cdf also doesn’t have a closed form, so we used the Box-Muller transformation to find the random variates for the normal distribution. This transformation uses two Uniform(0,1) random numbers, and also has two options for formulas, a sin or cos. The default for this function uses cos, but the user can change this optional parameter when they also enter the parameters for mu and sigma in the function call. The function then returns a value from the normal distribution.
 
